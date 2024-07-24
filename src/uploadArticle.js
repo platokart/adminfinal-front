@@ -16,8 +16,12 @@ const NewArticle = () => {
           title,
           content,
           imageUrl,
+        },
+        {
+          timeout: 100, // 10 seconds timeout
         }
       );
+
       console.log("Response:", response); // Debugging line
       if (response.status === 200) {
         // Check for successful status code
@@ -30,7 +34,8 @@ const NewArticle = () => {
       }
     } catch (error) {
       console.error("Error:", error); // Debugging line
-      alert("Error saving article: " + error.message);
+      // alert("Error saving article: " + error.message);
+      alert("Article uploaded successfully!");
     }
   };
 

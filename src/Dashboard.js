@@ -1,24 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Dashboard = () => {
   const [topIndustriesData, setTopIndustriesData] = useState([]);
   const [consultantExpertiseData, setConsultantExpertiseData] = useState([]);
+  const [totalCustomers, setTotalCustomers] = useState(0);
+  const [totalConsultants, setTotalConsultants] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseIndustries = await fetch('http://localhost:3000/admin/dashboard/top-industries');
+        const responseIndustries = await fetch(
+          "http://localhost:5000/admin/dashboard/top-industries"
+        );
         const industriesData = await responseIndustries.json();
         setTopIndustriesData(industriesData.data);
 
-        const responseExpertise = await fetch('http://localhost:3000/admin/dashboard/consultant-expertise');
+        const responseExpertise = await fetch(
+          "http://localhost:5000/admin/dashboard/consultant-expertise"
+        );
         const expertiseData = await responseExpertise.json();
         setConsultantExpertiseData(expertiseData.data);
 
+        const responseTotalCustomers = await fetch(
+          "http://localhost:5000/admin/dashboard/totalcustomers"
+        );
+        const totalCustomersData = await responseTotalCustomers.json();
+        setTotalCustomers(totalCustomersData.totalCustomers);
+
+        const responseTotalConsultants = await fetch(
+          "http://localhost:5000/admin/dashboard/totalconsultants"
+        );
+        const totalConsultantsData = await responseTotalConsultants.json();
+        setTotalConsultants(totalConsultantsData.totalConsultants);
+
+        const responseTotalRevenue = await fetch(
+          "http://localhost:5000/admin/dashboard/total-revenue"
+        );
+        const totalRevenueData = await responseTotalRevenue.json();
+        setTotalRevenue(totalRevenueData.totalRevenue);
+
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -27,19 +52,16 @@ const Dashboard = () => {
 
   // Sample data for key metrics
   const keyMetricsData = [
-    { label: 'Active Consultants', value: 12 },
-    { label: 'Ongoing Projects', value: 6 },
-    { label: 'Client Satisfaction Rating', value: 4.5 },
-    { label: 'Active Video Consultations', value: 8 },
-    { label: 'Upcoming Consultant Availability', value: 15 },
-    { label: 'Average Consultation Duration', value: '1h 30m' },
+    { label: "Total Customers", value: totalCustomers },
+    { label: "Total Consultants", value: totalConsultants },
+    { label: "Total Revenue", value: `$${totalRevenue.toFixed(2)}` },
   ];
 
   // Sample data for quick links
   const quickLinks = [
-    { label: 'Manage New Applications', link: '#' },
-    { label: 'Manage Ongoing Projects', link: '#' },
-    { label: 'View Reports', link: '#' },
+    { label: "Manage New Applications", link: "#" },
+    { label: "Manage Ongoing Projects", link: "#" },
+    { label: "View Reports", link: "#" },
   ];
 
   if (isLoading) {
@@ -47,7 +69,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="content-wrapper">
+    <div className="content-wrapper" style={{ marginLeft: "40px" }}>
       {/* Content Header (Page header) */}
       <div className="content-header">
         <div className="container-fluid">
@@ -58,7 +80,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Main content */}
       <section className="content">
         <div className="container-fluid">
@@ -78,7 +100,7 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
-          
+
           {/* Graphical Representation - Top Industries */}
           <div className="row">
             <div className="col-md-6">
@@ -91,9 +113,14 @@ const Dashboard = () => {
                     {topIndustriesData.map((item, index) => (
                       <li key={index} className="progress-group">
                         {item._id}
-                        <span className="float-right"><b>{item.count}</b>/100</span>
+                        <span className="float-right">
+                          <b>{item.count}</b>/100
+                        </span>
                         <div className="progress progress-sm">
-                          <div className="progress-bar bg-primary" style={{ width: `${item.count}%` }}></div>
+                          <div
+                            className="progress-bar bg-primary"
+                            style={{ width: `${item.count}%` }}
+                          ></div>
                         </div>
                       </li>
                     ))}
@@ -101,7 +128,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Graphical Representation - Consultant Expertise */}
             <div className="col-md-6">
               <div className="card">
@@ -113,9 +140,14 @@ const Dashboard = () => {
                     {consultantExpertiseData.map((item, index) => (
                       <li key={index} className="progress-group">
                         {item._id}
-                        <span className="float-right"><b>{item.count}</b>/100</span>
+                        <span className="float-right">
+                          <b>{item.count}</b>/100
+                        </span>
                         <div className="progress progress-sm">
-                          <div className="progress-bar bg-success" style={{ width: `${item.count}%` }}></div>
+                          <div
+                            className="progress-bar bg-success"
+                            style={{ width: `${item.count}%` }}
+                          ></div>
                         </div>
                       </li>
                     ))}
@@ -124,7 +156,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Quick Links */}
           <div className="row">
             <div className="col-md-6">
@@ -144,7 +176,6 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          
         </div>
       </section>
     </div>
